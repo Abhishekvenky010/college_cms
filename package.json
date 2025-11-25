@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "college_cms",
   "private": true,
   "scripts": {
     "build": "turbo run build",
