@@ -1,7 +1,10 @@
 {
-  "name": "backend",
+  "name": "common",
   "module": "index.ts",
   "type": "module",
+  "exports":{
+    "./inputs":"./inputs.ts"
+  },
   "private": true,
   "devDependencies": {
     "@types/bun": "latest"
@@ -10,10 +13,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.5",
-    "express": "^5.1.0",
-    "db":"*",
-    "common":"*"
+    "zod": "^4.1.13"
   }
 }
