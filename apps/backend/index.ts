@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors'
 import {prismaClient} from "db/client"
-import { authMiddleware } from './middleware';
+import { authMiddleware, courseAccessMiddleware } from './middleware';
 import jwt from 'jsonwebtoken';
 import {SignupSchema} from "common/inputs"
 import { config } from 'dotenv';
@@ -42,9 +42,12 @@ app.post("/signin",async (req,res)=>{
     },process.env.JWT_SECRET as string)
     res.json({ token });
 })
-app.get("/calendar",authMiddleware,(req,res)=>{
-    
+app.get("/calendar/:courseId", authMiddleware, courseAccessMiddleware, async (req, res) => {
+    res.json({
+        calendarId: req.course!.calendarNotionId,
+        id: req.course!.id
+    })
 })
-app.listen(process.env.PORT||3000, () => {
-    console.log('Server is running on port 3000')
+app.listen(process.env.PORT||3001, () => {
+    console.log('Server is running on port 3001')
 })

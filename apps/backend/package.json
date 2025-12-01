@@ -7,13 +7,14 @@
     "@types/bun": "latest"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5.9.2"
   },
   "dependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
-    "express": "^5.1.0",
-    "db":"*",
-    "common":"*"
+    "common": "*",
+    "cors": "^2.8.5",
+    "db": "*",
+    "express": "^5.1.0"
   }
 }
