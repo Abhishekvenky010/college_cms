@@ -48,6 +48,27 @@ app.get("/calendar/:courseId", authMiddleware, courseAccessMiddleware, async (re
         id: req.course!.id
     })
 })
+
+
+app.get("/courses", authMiddleware, async(req, res) => {
+    const courses = await prismaClient.course.findMany({
+        where: {
+            purchase: {
+                some: {
+                    userId: req.userId
+                }
+            }
+        }
+    });
+
+    res.json({
+        courses: courses.map(c => ({
+            id: c.id,
+            title: c.title,
+            slug: c.slug
+        }))
+    })
+})
 app.listen(process.env.PORT||3001, () => {
     console.log('Server is running on port 3001')
 })
