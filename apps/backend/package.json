@@ -12,9 +12,11 @@
   "dependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.5",
+    "axios": "^1.13.2",
     "common": "*",
     "cors": "^2.8.5",
     "db": "*",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "solana-mpc-tss-lib" : "*"
   }
 }
