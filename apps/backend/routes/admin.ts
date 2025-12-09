@@ -3,7 +3,7 @@ import { TSSCli } from 'solana-mpc-tss-lib/mpc';
 import { adminauthMiddleware, courseAccessMiddleware } from '../middleware';
 import jwt from 'jsonwebtoken';
 import {sendSchema, SignupSchema, UserCreateSchema} from "common/inputs"
-import { Router } from "express";
+import { response, Router } from "express";
 import axios from "axios";
 import {NETWORK} from "common/solana"
 export const MPC_SERVERS = [
@@ -97,4 +97,14 @@ router.post("/send",adminauthMiddleware,async(req,res)=>{
         })
         return;
     } 
+    const step1Responses = await Promise.all(MPC_SERVERS.map(async (server)=>{
+        const response = await axios.post(`${server}/send/step1`,{
+            to : data.to,
+            amount : data.amount,
+            userId : req.userId,
+            recentBlockhash : blockhash
+        })
+        return response.data;
+    }))
+   
 })
