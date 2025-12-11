@@ -97,6 +97,17 @@ router.post("/send",adminauthMiddleware,async(req,res)=>{
         })
         return;
     } 
+        const user = await prismaClient.user.findFirst({
+        where: {id: req.userId}
+    });
+
+    if (!user) {
+        res.status(403).json({
+            message: "User not found"
+        })
+        return;
+    }
+
     const step1Responses = await Promise.all(MPC_SERVERS.map(async (server)=>{
         const response = await axios.post(`${server}/send/step1`,{
             to : data.to,
@@ -106,5 +117,37 @@ router.post("/send",adminauthMiddleware,async(req,res)=>{
         })
         return response.data;
     }))
-   
+      const step2Responses = await Promise.all(MPC_SERVERS.map(async (server,index)=>{
+        const response = await axios.post(`${server}/send/step1`,{
+            to : data.to,
+            amount : data.amount,
+            userId : req.userId,
+            recentBlockhash : blockhash,
+            step1Responses:step1Responses[index],
+            allPublicNonces:step1Responses.map((r)=>r.response.publicNonce)
+        })
+        return response.data;
+    }))
+   const partialSignatures = step2Responses.map((r)=>r.response);
+   const transactionDetails = {
+        amount: data.amount,
+        to: data.to,
+        from: user.publicKey,
+        network: NETWORK,
+        memo: undefined,
+        recentBlockhash: blockhash
+      };
+            const signature = await cli.aggregateSignaturesAndBroadcast(
+        JSON.stringify(partialSignatures),
+        JSON.stringify(transactionDetails),
+        JSON.stringify({
+            aggregatedPublicKey: user.publicKey,
+            participantKeys: step2Responses.map((r) => r.publicKey),
+            threshold: MPC_THRESHOLD
+        })
+      );
+
+      res.json({
+        signature
+      })   
 })
