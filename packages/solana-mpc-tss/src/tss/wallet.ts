@@ -12,7 +12,9 @@ export class TSSWallet {
 
   constructor(network: SolanaNetwork = 'devnet') {
     this.network = network;
-    this.connection = new Connection(clusterApiUrl(network), 'confirmed');
+    //this.connection = new Connection(clusterApiUrl(network), 'confirmed');
+      this.connection = new Connection("https://dimensional-compatible-snowflake.solana-devnet.quiknode.pro/7a58705f0294a1578e35e73adc8b5b20b180d298/", 'confirmed');
+  
   }
 
   /**

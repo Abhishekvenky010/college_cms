@@ -3,17 +3,22 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun run index.ts"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/libsodium-wrappers": "^0.7.14"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "@types/express": "^5.0.6",
+    "common": "*",
     "express": "^5.2.1",
-    "solana-mpc-tss-lib": "*",
+    "libsodium-wrappers": "^0.7.15",
     "mpc-db": "*",
-    "common" : "*"
+    "solana-mpc-tss-lib": "*"
   }
 }

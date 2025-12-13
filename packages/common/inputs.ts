@@ -9,7 +9,7 @@ export const UserCreateSchema = z.object({
     password: z.string(),
     phone: z.string()
 })
-export const sendSchema = z.object({
+export const SendSchema = z.object({
     to : z.string(),
     amount : z.string()
 })

@@ -2,7 +2,7 @@ import {prismaClient} from "db/client";
 import { TSSCli } from 'solana-mpc-tss-lib/mpc';
 import { adminauthMiddleware, courseAccessMiddleware } from '../middleware';
 import jwt from 'jsonwebtoken';
-import {sendSchema, SignupSchema, UserCreateSchema} from "common/inputs"
+import {SendSchema, SignupSchema, UserCreateSchema} from "common/inputs"
 import { response, Router } from "express";
 import axios from "axios";
 import {NETWORK} from "common/solana"
@@ -82,14 +82,14 @@ router.post("/create_user",adminauthMiddleware,async (req,res)=>{
         publicKey:aggregatedPublicKey.aggregatedPublicKey
     }
   })   
-  await cli.airdrop(aggregatedPublicKey.aggregatedPublicKey,1000000000);
+  await cli.airdrop(aggregatedPublicKey.aggregatedPublicKey,0.1);
   res.json({
     message : "user created",
     user
   })
 })
 router.post("/send",adminauthMiddleware,async(req,res)=>{
-    const {success,data} = sendSchema.safeParse(req.body);
+    const {success,data} = SendSchema.safeParse(req.body);
     const blockhash = await cli.recentBlockHash();
     if(!success){
         res.status(403).json({
@@ -118,13 +118,13 @@ router.post("/send",adminauthMiddleware,async(req,res)=>{
         return response.data;
     }))
       const step2Responses = await Promise.all(MPC_SERVERS.map(async (server,index)=>{
-        const response = await axios.post(`${server}/send/step1`,{
+        const response = await axios.post(`${server}/send/step2`,{
             to : data.to,
             amount : data.amount,
             userId : req.userId,
             recentBlockhash : blockhash,
-            step1Responses:step1Responses[index],
-            allPublicNonces:step1Responses.map((r)=>r.response.publicNonce)
+            step1Responses: step1Responses[index].response,
+            allPublicNonces: step1Responses.map((r)=>r.response.publicNonce)
         })
         return response.data;
     }))
@@ -149,5 +149,4 @@ router.post("/send",adminauthMiddleware,async(req,res)=>{
 
       res.json({
         signature
-      })   
-})
+      })   })
