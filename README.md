@@ -1,135 +1,307 @@
-# Turborepo starter
+# College CMS with Solana MPC/TSS Integration
 
-This Turborepo starter is maintained by the Turborepo core team.
+A comprehensive college content management system with blockchain integration using Solana Multi-Party Computation (MPC) and Threshold Signature Schemes (TSS) for secure transactions.
 
-## Using this example
+## 📁 Project Structure
 
-Run the following command:
-
-```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+This is a Turborepo monorepo with the following structure:
 
 ```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+college_cms/
+├── apps/
+│   ├── backend/          # Express API server (port 3000)
+│   ├── fe/              # Next.js frontend (port 4000)
+│   ├── mpc_backend/     # MPC/TSS backend server (port 3001)
+│   └── web/             # Next.js marketing/info site
+├── packages/
+│   ├── common/          # Shared utilities and types
+│   ├── db/              # Prisma ORM for main database
+│   ├── eslint-config/   # ESLint configurations
+│   ├── mpc-db/          # Prisma ORM for MPC keyshare storage
+│   ├── solana-mpc-tss/  # Solana MPC/TSS library
+│   ├── typescript-config/ # TypeScript configurations
+│   └── ui/              # React component library
+└── package.json         # Root package.json
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 🚀 Getting Started
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+### Prerequisites
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+- Node.js >= 18
+- Bun package manager (v1.3.3)
+- PostgreSQL databases (for main DB and MPC DB)
 
-### Develop
+### Installation
 
-To develop all apps and packages, run the following command:
+```bash
+# Install dependencies
+bun install
 
-```
-cd my-turborepo
+# Build all apps and packages
+bun run build
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# Start development servers
+bun run dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### Services
 
+- **Backend API**: http://localhost:3000
+- **Frontend**: http://localhost:4000
+- **MPC Backend**: http://localhost:3001
+
+## 📦 Apps
+
+### Backend (Express API)
+
+**Location**: [`apps/backend/`](apps/backend/)
+
+RESTful API server built with Express.js, providing endpoints for:
+- User authentication and management
+- Course management
+- Purchase tracking
+- Solana wallet integration
+
+Key Files:
+- [`index.ts`](apps/backend/index.ts) - Server entry point
+- [`routes/user.ts`](apps/backend/routes/user.ts) - User routes
+- [`routes/admin.ts`](apps/backend/routes/admin.ts) - Admin routes
+- [`middleware.ts`](apps/backend/middleware.ts) - Authentication middleware
+
+### Frontend (Next.js)
+
+**Location**: [`apps/fe/`](apps/fe/)
+
+Student-facing application with:
+- User authentication (sign in)
+- Dashboard
+- Course calendar
+- Wallet management
+- Purchase history
+
+Key Files:
+- [`app/page.tsx`](apps/fe/app/page.tsx) - Sign in page
+- [`app/(sidebar)/dashboard/page.tsx`](apps/fe/app/(sidebar)/dashboard/page.tsx) - Dashboard
+- [`app/(sidebar)/calendar/[courseId]/page.tsx`](apps/fe/app/(sidebar)/calendar/[courseId]/page.tsx) - Course calendar
+- [`lib/api.ts`](apps/fe/lib/api.ts) - API client
+- [`components/RequireAuth.tsx`](apps/fe/components/RequireAuth.tsx) - Authentication guard
+
+### MPC Backend (Express API)
+
+**Location**: [`apps/mpc_backend/`](apps/mpc_backend/)
+
+MPC/TSS server for Solana transactions:
+- User key generation
+- Multi-party signing workflow
+- Step 1 and Step 2 of aggregate signing
+- Integration with Solana blockchain
+
+Key Files:
+- [`index.ts`](apps/mpc_backend/index.ts) - Server entry point with TSS operations
+
+### Web (Next.js)
+
+**Location**: [`apps/web/`](apps/web/)
+
+Marketing and information website for the college CMS.
+
+## 📦 Packages
+
+### Common
+
+**Location**: [`packages/common/`](packages/common/)
+
+Shared utilities and types:
+- Input validation schemas
+- Solana-related constants
+- Common interfaces
+
+### DB (Prisma ORM)
+
+**Location**: [`packages/db/`](packages/db/)
+
+Main database schema with:
+- User model (authentication, roles)
+- Course model (course information)
+- Purchases model (course purchases)
+
+Key File:
+- [`prisma/schema.prisma`](packages/db/prisma/schema.prisma) - Database schema
+
+### MPC-DB (Prisma ORM)
+
+**Location**: [`packages/mpc-db/`](packages/mpc-db/)
+
+MPC keyshare storage:
+- Keypair generation and storage
+- User public/secret key management
+
+Key File:
+- [`prisma/schema.prisma`](packages/mpc-db/prisma/schema.prisma) - Keyshare schema
+
+### Solana MPC/TSS Library
+
+**Location**: [`packages/solana-mpc-tss/`](packages/solana-mpc-tss/)
+
+Comprehensive TypeScript library for Solana MPC and TSS:
+- Secure signing without private key exposure
+- Threshold signature schemes (m-of-n)
+- Solana integration with `Signer` interface
+- WASM-optimized ed25519_tss_wasm with tweetnacl fallback
+- ZenGo-X/solana-tss compatibility
+
+Key Features:
+- MPC signing operations
+- TSS workflow support
+- Solana transaction utilities
+- Network support (mainnet-beta, devnet, testnet)
+
+### UI (React Component Library)
+
+**Location**: [`packages/ui/`](packages/ui/)
+
+Reusable React components:
+- Button
+- Card
+- Code block
+- and more...
+
+### Config Packages
+
+- **eslint-config**: ESLint configurations
+- **typescript-config**: TypeScript configurations
+
+## 🔒 Authentication
+
+The system uses JWT (JSON Web Tokens) for authentication:
+- Users sign in with email and password
+- Tokens are stored in localStorage
+- Protected routes require valid tokens
+- Roles: USER and ADMIN
+
+## 📊 Database Schemas
+
+### Main Database (PostgreSQL)
+
+```prisma
+// User model
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  phone     String    @unique
+  password  String
+  publicKey String?
+  purchases Purchases[]
+  role      Role      @default(USER)
+}
+
+// Course model
+model Course {
+  id                 String       @id @default(uuid())
+  title              String
+  slug               String       @unique
+  purchase           Purchases[]
+  calendarNotionId   String 
+}
+
+// Purchases model
+model Purchases {
+  id        String  @id @default(uuid())
+  courseId  String
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  course    Course  @relation(fields: [courseId], references: [id])
+  @@unique([userId, courseId])
+}
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+### MPC Database (PostgreSQL)
+
+```prisma
+// Keyshare model
+model keyshare {
+  id         String    @id @default(uuid())
+  userid     String    @unique
+  publicKey  String
+  secretKey  String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
 ```
 
-### Remote Caching
+## 🎯 Features
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### Student Features
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+- User authentication
+- Dashboard with course overview
+- Course calendar (Notion integration)
+- Wallet management (Solana)
+- Purchase history
+- Secure transactions using MPC/TSS
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+### Admin Features
 
+- User management
+- Course management
+- Purchase tracking
+- Analytics
+- System configuration
+
+## 🛠️ Development
+
+### Scripts
+
+```bash
+# Build all apps and packages
+bun run build
+
+# Start development servers
+bun run dev
+
+# Lint all files
+bun run lint
+
+# Check types
+bun run check-types
+
+# Format files with Prettier
+bun run format
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
+### Filtering Tasks
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+# Build only the frontend
+bun run build --filter=frontend
+
+# Start only the backend
+bun run dev --filter=backend
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## 🚀 Deployment
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+This project uses Turborepo for efficient builds and caching. Deployment can be configured with:
+- Vercel (for frontend apps)
+- Docker (for backend services)
+- Any cloud provider supporting Node.js and PostgreSQL
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
+## 📚 Documentation
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
+- **Solana MPC/TSS Library**: [`packages/solana-mpc-tss/README.md`](packages/solana-mpc-tss/README.md)
+- **API Documentation**: TBD (Swagger/OpenAPI)
+- **Developer Guide**: TBD
 
-## Useful Links
+## 🔒 Security
 
-Learn more about the power of Turborepo:
+- MPC/TSS ensures private keys never exist in plaintext
+- Threshold signatures (configurable m-of-n)
+- Network isolation for different Solana networks
+- Automatic fallback from WASM to pure JavaScript
+- Type safety with TypeScript
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## 🤝 Contributing
+
+Contributions are welcome! Please refer to the CONTRIBUTING.md file (TBD) for guidelines.
+
